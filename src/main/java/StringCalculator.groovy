@@ -3,40 +3,70 @@
  */
 class StringCalculator {
 
-    private String delimiter = "[\n,]"
-
-    int add(String input) {
-        if (isInputEmpty(input))
-            return 0
-
-        calculateSum(input)
+    static int add(String input) {
+        new InnerCalculator(input).add()
     }
 
-    private boolean isInputEmpty(String input) {
-        input.isEmpty()
-    }
+    static class InnerCalculator {
 
-    private int calculateSum(String input) {
-        int result = 0;
-        String numbersWithDelimiters
+        private static final String DEFAULT_DELIMITER = "[\n,]"
 
-        if (hasCustomDelimiter(input)) {
-            numbersWithDelimiters = parseCustomDelimiter(input)
-        } else {
+        private String delimiter
+        private String numbersWithDelimiters
+        private final String input;
+
+        public InnerCalculator(String input) {
+            this.input = input
+        }
+
+        int add() {
+            if (isInputEmpty())
+                return 0
+
+            handleDelimiter()
+            calculateSum()
+        }
+
+        private boolean isInputEmpty() {
+            input.isEmpty()
+        }
+
+        private void handleDelimiter() {
+            if (hasCustomDelimiter()) {
+                parseCustomDelimiter()
+            } else {
+                useDefaultDelimiter()
+            }
+        }
+
+        private boolean hasCustomDelimiter() {
+            input.startsWith("//")
+        }
+
+        private void useDefaultDelimiter() {
             numbersWithDelimiters = input
+            delimiter = DEFAULT_DELIMITER
         }
-        numbersWithDelimiters.split(delimiter).each { token ->
-            result += Integer.valueOf(token)
+
+        private void parseCustomDelimiter() {
+            delimiter = input.charAt(3)
+            numbersWithDelimiters = input.substring(6)
         }
-        result
-    }
 
-    private String parseCustomDelimiter(String input) {
-        delimiter = input.charAt(3)
-        input.substring(6)
-    }
-
-    private boolean hasCustomDelimiter(String input) {
-        input.startsWith("//")
+        private int calculateSum() {
+            List negativeValues = []
+            int result = 0;
+            numbersWithDelimiters.split(delimiter).each { token ->
+                def intValue = Integer.valueOf(token)
+                if (intValue < 0) {
+                    negativeValues << intValue
+                }
+                result += intValue
+            }
+            if (!negativeValues.isEmpty()) {
+                throw new IllegalArgumentException(String.format('negatives not supported (%s)', negativeValues.join(",")))
+            }
+            result
+        }
     }
 }

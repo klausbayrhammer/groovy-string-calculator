@@ -3,6 +3,8 @@ import org.junit.Test
 
 import static org.hamcrest.CoreMatchers.is
 import static org.junit.Assert.assertThat
+import static org.junit.matchers.JUnitMatchers.containsString
+
 /**
  * @author Klaus Bayrhammer
  */
@@ -38,6 +40,24 @@ class StringCalculatorTest {
     @Test
     void addWithTwoValidInputsSeparatedByCustomDelimiter() {
         assertThat calculator.add("//[x]\n1x2"), is(3)
+    }
+
+    @Test
+    void addWithSingleNegativeValue() {
+        try {
+            calculator.add("-1")
+        } catch (IllegalArgumentException iae) {
+            assertThat iae.getMessage(), containsString("negatives not supported (-1)")
+        }
+    }
+
+    @Test
+    void addWithMultipleNegativeValues() {
+        try {
+            calculator.add("-1,-2")
+        } catch (IllegalArgumentException iae) {
+            assertThat iae.getMessage(), containsString("negatives not supported (-1,-2)")
+        }
     }
 
 
