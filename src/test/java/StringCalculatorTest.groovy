@@ -26,8 +26,18 @@ class StringCalculatorTest {
     }
 
     @Test
-    void addWithTwoValidInputs() {
+    void addWithTwoValidInputsSeparatedByCommas() {
         assertThat calculator.add("1,2"), is(3)
+    }
+
+    @Test
+    void addWithTwoValidInputsSeparatedByNewlines() {
+        assertThat calculator.add("1\n2"), is(3)
+    }
+
+    @Test
+    void addWithTwoValidInputsSeparatedByCustomDelimiter() {
+        assertThat calculator.add("//[x]\n1x2"), is(3)
     }
 
 
