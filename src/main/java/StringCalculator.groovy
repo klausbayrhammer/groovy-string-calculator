@@ -14,6 +14,7 @@ class StringCalculator {
         private String delimiter
         private String numbersWithDelimiters
         private final String input;
+        private ArrayList parsedNumbers = []
 
         public InnerCalculator(String input) {
             this.input = input
@@ -24,6 +25,7 @@ class StringCalculator {
                 return 0
 
             handleDelimiter()
+            parseNumbers()
             calculateSum()
         }
 
@@ -53,20 +55,39 @@ class StringCalculator {
             numbersWithDelimiters = input.substring(6)
         }
 
-        private int calculateSum() {
-            List negativeValues = []
-            int result = 0;
+        private List parseNumbers() {
             numbersWithDelimiters.split(delimiter).each { token ->
-                def intValue = Integer.valueOf(token)
-                if (intValue < 0) {
-                    negativeValues << intValue
-                }
-                result += intValue
+                parsedNumbers << new ParsedNumber(token)
+            }
+        }
+
+        private int calculateSum() {
+            int result = 0;
+            List negativeValues = []
+            parsedNumbers.each { number ->
+                if (!number.ignored)
+                    result += number.value
+                if (number.illegal)
+                    negativeValues << number.value
             }
             if (!negativeValues.isEmpty()) {
                 throw new IllegalArgumentException(String.format('negatives not supported (%s)', negativeValues.join(",")))
             }
             result
+        }
+
+        static class ParsedNumber {
+            final int value;
+            final boolean ignored;
+            final boolean illegal;
+
+            ParsedNumber(String strValue) {
+                this.value = Integer.valueOf(strValue)
+                if (value > 1000)
+                    ignored = true;
+                if (value < 0)
+                    illegal = true;
+            }
         }
     }
 }
