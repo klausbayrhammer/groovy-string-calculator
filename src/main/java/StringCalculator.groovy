@@ -52,7 +52,8 @@ class StringCalculator {
 
         private void parseCustomDelimiter() {
             def endOfFirstLine = input.indexOf("\n")
-            delimiter = input.substring(3, endOfFirstLine-1)
+            List customDelimitors = input.substring(3, endOfFirstLine-1).split("\\]\\[")
+            delimiter = customDelimitors.join("|")
             numbersWithDelimiters = input.substring(endOfFirstLine+1)
         }
 

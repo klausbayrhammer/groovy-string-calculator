@@ -62,4 +62,9 @@ class StringCalculatorTest {
     void addWithCustomerDelimitersOfLengthTwo() {
         assertThat add("//[xx]\n1xx2"), is(3)
     }
+
+    @Test
+    void addWithTwoCustomerDelimitersOfLengthTwo() {
+        assertThat add("//[xx][yy]\n1xx2yy3"), is(6)
+    }
 }
