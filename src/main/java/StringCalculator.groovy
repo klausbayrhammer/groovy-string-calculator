@@ -51,8 +51,9 @@ class StringCalculator {
         }
 
         private void parseCustomDelimiter() {
-            delimiter = input.charAt(3)
-            numbersWithDelimiters = input.substring(6)
+            def endOfFirstLine = input.indexOf("\n")
+            delimiter = input.substring(3, endOfFirstLine-1)
+            numbersWithDelimiters = input.substring(endOfFirstLine+1)
         }
 
         private List parseNumbers() {

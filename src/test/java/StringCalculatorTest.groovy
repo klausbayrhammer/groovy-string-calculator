@@ -57,4 +57,9 @@ class StringCalculatorTest {
     void addWithNumberLargerThanThousand() {
         assertThat add("1,1001"), is(1)
     }
+
+    @Test
+    void addWithCustomerDelimitersOfLengthTwo() {
+        assertThat add("//[xx]\n1xx2"), is(3)
+    }
 }
